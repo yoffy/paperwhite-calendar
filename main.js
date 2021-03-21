@@ -3,6 +3,7 @@
 var g_MainLoopId;
 var g_Today;
 var g_DateForMonth;
+var g_ToRender = true;
 var g_HolidaysAPI = 'https://holidays-jp.github.io/api/v1/date.json';
 var g_Holidays = {
     "2020-01-01": "元日",
@@ -75,6 +76,7 @@ function init()
 	g_MainLoopId = mainLoop();
 	loadHolidays(function () {
 		window.clearTimeout(g_MainLoopId);
+		g_ToRender = true;
 		g_MainLoopId = mainLoop();
 	});
 }
@@ -86,6 +88,7 @@ function movePrev()
 		g_DateForMonth.getMonth() - 1,
 		1));
 	window.clearTimeout(g_MainLoopId);
+	g_ToRender = true;
 	g_MainLoopId = mainLoop();
 }
 
@@ -96,6 +99,7 @@ function moveToday()
 		g_Today.getMonth(),
 		1));
 	window.clearTimeout(g_MainLoopId);
+	g_ToRender = true;
 	g_MainLoopId = mainLoop();
 }
 
@@ -106,6 +110,7 @@ function moveNext()
 		g_DateForMonth.getMonth() + 1,
 		1));
 	window.clearTimeout(g_MainLoopId);
+	g_ToRender = true;
 	g_MainLoopId = mainLoop();
 }
 
@@ -153,10 +158,14 @@ function mainLoop()
 	var today = now();
 	if ( today.getDate() !== g_Today.getDate() ) {
 		g_DateForMonth = new Date(today.getTime());
+		g_ToRender = true;
 	}
 	g_Today = today;
 	showDateTime(g_DateForMonth, g_Today);
-	showCalendar(g_DateForMonth, g_Today);
+	if ( g_ToRender ) {
+		showCalendar(g_DateForMonth, g_Today);
+	}
+	g_ToRender = false;
 	return window.setTimeout(mainLoop, (60 - g_Today.getSeconds()) * 1000);
 }
 
