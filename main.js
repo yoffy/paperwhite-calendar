@@ -168,6 +168,7 @@ function showDateTime(dateForManth, today)
 	var text = month + 'がつ ' + hours + ':' + minutes;
 	var clock = document.getElementById('clock');
 	clock.innerHTML = text.replace(/ /g, '&nbsp;');
+	document.title = dateForManth.getFullYear() + 'ねん';
 }
 
 function showCalendar(dateForManth, today)
