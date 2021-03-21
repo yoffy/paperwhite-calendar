@@ -1,5 +1,6 @@
 "use strict";
 
+var k_Is12Hours = true;
 var g_MainLoopId;
 var g_Today;
 var g_DateForMonth;
@@ -172,7 +173,11 @@ function mainLoop()
 function showDateTime(dateForManth, today)
 {
 	var month = (' ' + (dateForManth.getMonth()+1)).slice(-2);
-	var hours = (' ' + today.getHours()).slice(-2);
+	var numHours = today.getHours();
+	if ( k_Is12Hours && numHours >= 13 ) {
+		numHours = numHours % 12;
+	}
+	var hours = (' ' + numHours).slice(-2);
 	var minutes = ('0' + today.getMinutes()).slice(-2);
 	var text = month + 'がつ ' + hours + ':' + minutes;
 	var clock = document.getElementById('clock');
