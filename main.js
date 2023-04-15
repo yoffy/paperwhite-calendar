@@ -145,6 +145,8 @@ function showCalendar(dateForManth, today)
 	var iDate = new Date(firstDate.getTime());
 	var hyphenedToday = toHyphenedDate(today.getFullYear(), today.getMonth() + 1, today.getDate());
 	var html = '';
+	var holidayName = '';
+	var eventText = '';
 
 	// day of weeks
 	html += '<tr style="background-color: lightgray">';
@@ -168,9 +170,15 @@ function showCalendar(dateForManth, today)
 				html += '<td style="color: gray">' + num + '</td>';
 			} else if ( hyphenedToday === toHyphenedDate(year, month, iDate.getDate()) ) {
 				html += '<td style="background-color: black; color: white;">' + iDate.getDate() + '</td>';
-			} else if ( g_Holidays[toHyphenedDate(year, month, iDate.getDate())] ) {
+				if ( g_Holidays[hyphenedToday] ) {
+					eventText = (iDate.getMonth() + 1) + '/' + iDate.getDate() + ':' + g_Holidays[hyphenedToday];
+				}
+			} else if ( holidayName = g_Holidays[toHyphenedDate(year, month, iDate.getDate())] ) {
 				// holiday
 				html += '<td style="background-color: lightgray">' + iDate.getDate() + '</td>';
+				if ( ! eventText && today < iDate ) {
+					eventText = (iDate.getMonth() + 1) + '/' + iDate.getDate() + ':' + holidayName;
+				}
 			} else {
 				html += '<td>' + iDate.getDate() + '</td>';
 			}
@@ -187,4 +195,6 @@ function showCalendar(dateForManth, today)
 
 	var calendar = document.getElementById('calendar');
 	calendar.innerHTML = html;
+	var eventElement = document.getElementById('event');
+	eventElement.innerHTML = eventText;
 }
