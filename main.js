@@ -22,11 +22,10 @@ function init()
 {
 	g_Today = now();
 	g_DateForMonth = new Date(g_Today.getTime());
-	g_MainLoopId = mainLoop();
+	mainLoop();
 	loadHolidays(function () {
-		window.clearTimeout(g_MainLoopId);
 		g_ToRender = true;
-		g_MainLoopId = mainLoop();
+		mainLoop();
 	});
 }
 
@@ -36,9 +35,8 @@ function movePrev()
 		g_DateForMonth.getFullYear(),
 		g_DateForMonth.getMonth() - 1,
 		1));
-	window.clearTimeout(g_MainLoopId);
 	g_ToRender = true;
-	g_MainLoopId = mainLoop();
+	mainLoop();
 }
 
 function moveToday()
@@ -47,9 +45,8 @@ function moveToday()
 		g_Today.getFullYear(),
 		g_Today.getMonth(),
 		1));
-	window.clearTimeout(g_MainLoopId);
 	g_ToRender = true;
-	g_MainLoopId = mainLoop();
+	mainLoop();
 }
 
 function moveNext()
@@ -58,9 +55,8 @@ function moveNext()
 		g_DateForMonth.getFullYear(),
 		g_DateForMonth.getMonth() + 1,
 		1));
-	window.clearTimeout(g_MainLoopId);
 	g_ToRender = true;
-	g_MainLoopId = mainLoop();
+	mainLoop();
 }
 
 //======================================================================
@@ -104,6 +100,9 @@ function loadHolidays(nextAction)
 
 function mainLoop()
 {
+	if ( g_MainLoopId != undefined ) {
+		window.clearTimeout(g_MainLoopId);
+	}
 	var today = now();
 	if ( today.getDate() !== g_Today.getDate() ) {
 		g_DateForMonth = new Date(today.getTime());
@@ -115,7 +114,7 @@ function mainLoop()
 		showCalendar(g_DateForMonth, g_Today);
 	}
 	g_ToRender = false;
-	return window.setTimeout(mainLoop, (60 - g_Today.getSeconds()) * 1000);
+	g_MainLoopId = window.setTimeout(mainLoop, (60 - g_Today.getSeconds()) * 1000);
 }
 
 function showDateTime(dateForManth, today)
